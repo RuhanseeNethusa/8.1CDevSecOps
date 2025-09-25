@@ -18,10 +18,17 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'npm test || true'   // allows pipeline to continue even if tests fail
+                        sh 'npm test || true'
                         emailext (
                             subject: "Test Stage Completed",
-                            body: "The Test stage executed (may include failures). Check logs for details.",
+                            body: """Hello Team,  
+
+The Test stage has completed successfully.  
+Please review the attached build log for details of the test execution.  
+
+Thank You! 
+Jenkins Pipeline  
+""",
                             to: "ruhansee@gmail.com",
                             attachLog: true
                         )
@@ -29,7 +36,14 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                         emailext (
                             subject: "FAILED: Test Stage",
-                            body: "The Test stage crashed. Please check logs.",
+                            body: """Hello Team,  
+
+The **Test stage failed** .  
+Please check Jenkins console logs for more details.  
+
+Thanks,  
+Jenkins Pipeline  
+""",
                             to: "ruhansee@gmail.com",
                             attachLog: true
                         )
@@ -43,10 +57,17 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'npm audit || true'   //  also continues even if vulnerabilities found
+                        sh 'npm audit || true'
                         emailext (
                             subject: "Security Scan Completed",
-                            body: "The Security Scan executed (may include vulnerabilities). Check logs.",
+                            body: """Hello Team,  
+
+The **Security Scan stage** has finished.  
+Some vulnerabilities may still exist, please review the attached log for more information.  
+
+Thanks,  
+Jenkins Pipeline  
+""",
                             to: "ruhansee@gmail.com",
                             attachLog: true
                         )
@@ -54,7 +75,14 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                         emailext (
                             subject: "FAILED: Security Scan Stage",
-                            body: "The Security Scan crashed. Please check logs.",
+                            body: """Hello Team,  
+
+The **Security Scan stage failed** .  
+Please review the Jenkins build log to investigate further.  
+
+Thanks,  
+Jenkins Pipeline  
+""",
                             to: "ruhansee@gmail.com",
                             attachLog: true
                         )
@@ -69,7 +97,15 @@ pipeline {
         always {
             emailext (
                 subject: "Pipeline Finished - ${currentBuild.currentResult}",
-                body: "The pipeline finished with status: ${currentBuild.currentResult}",
+                body: """Hello Team,  
+
+The pipeline has completed with the following result: **${currentBuild.currentResult}**.  
+
+Please check the attached build log for the full details of the pipeline run.  
+
+Thanks,  
+Jenkins Pipeline  
+""",
                 to: "ruhansee@gmail.com",
                 attachLog: true
             )
